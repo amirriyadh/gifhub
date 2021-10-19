@@ -16,22 +16,29 @@ struct ContentView: View {
         animation: .default)
     private var items: FetchedResults<Item>
 
-    var body: some View {
-        List {
-            ForEach(items) { item in
-                Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-            }
-            .onDelete(perform: deleteItems)
-        }
-        .toolbar {
-            #if os(iOS)
-            EditButton()
-            #endif
+    @State var users = ["User1", "User2"]
 
-            Button(action: addItem) {
-                Label("Add Item", systemImage: "plus")
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(items) { item in
+                    Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+                }
+                .onDelete(perform: deleteItems)
             }
+            .toolbar {
+                #if os(iOS)
+                EditButton()
+                #endif
+
+                Button(action: addItem) {
+                    Label("Add Item", systemImage: "plus")
+                }
+            }
+            .navigationTitle("Test")
         }
+
+
     }
 
     private func addItem() {
@@ -75,6 +82,9 @@ private let itemFormatter: DateFormatter = {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        Group {
+            ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        }
     }
 }
